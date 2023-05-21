@@ -1,0 +1,31 @@
+name: Run daily GitHub Digest
+
+on:
+  schedule:
+    # Daily at 14:00 UTC (9 Central)
+    - cron: "0 14 * * *"
+
+jobs:
+  digest:
+    name: GitHub Digest
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - name: Install Dependencies
+        run: |
+          pip install -r github-digest/requirements.txt
+
+      - name: Run
+        env:
+          EMAIL_ADDRESS: ${{ secrets.EMAIL_ADDRESS }}
+          EMAIL_USERNAME: ${{ secrets.EMAIL_USERNAME }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: python github-digest/main.py
