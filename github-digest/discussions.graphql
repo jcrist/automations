@@ -16,7 +16,6 @@
         lastEditedAt
         repo: repository {
           nameWithOwner
-          url
         }
         number
         title
