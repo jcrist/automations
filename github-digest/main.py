@@ -16,9 +16,8 @@ import msgspec
 import requests
 
 
-class Repo(msgspec.Struct, rename="camel", frozen=True):
+class Repo(msgspec.Struct, rename="camel"):
     name_with_owner: str
-    url: str
 
 
 class Actor(msgspec.Struct):
