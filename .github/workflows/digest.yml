@@ -4,6 +4,7 @@ on:
   schedule:
     # Daily at 14:00 UTC (9 Central)
     - cron: "0 14 * * *"
+  workflow_dispatch: {}
 
 jobs:
   digest:
