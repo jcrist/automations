@@ -1,0 +1,32 @@
+{
+  search(type: DISCUSSION, first: 25, %s) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    items: nodes {
+      ... on Discussion {
+        type: __typename
+        author {
+          login
+        }
+        url
+        closedAt
+        createdAt
+        lastEditedAt
+        repo: repository {
+          nameWithOwner
+          url
+        }
+        number
+        title
+        comments(last: 1) {
+          totalCount
+          items: nodes {
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+}

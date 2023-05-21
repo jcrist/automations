@@ -1,0 +1,62 @@
+{
+  search(type: ISSUE, first: 25, %s) {
+    pageInfo {
+      hasNextPage
+      endCursor
+    }
+    items: nodes {
+      ... on PullRequest {
+        type: __typename
+        author {
+          login
+        }
+        url
+        state
+        closedAt
+        createdAt
+        lastEditedAt
+        repo: repository {
+          nameWithOwner
+          url
+        }
+        number
+        title
+        comments(last: 1) {
+          totalCount
+          items: nodes {
+            updatedAt
+          }
+        }
+        reviews(last: 1) {
+          totalCount
+          items: nodes {
+            updatedAt
+          }
+        }
+      }
+      ... on Issue {
+        type: __typename
+        author {
+          login
+        }
+        url
+        state
+        closedAt
+        createdAt
+        lastEditedAt
+        repo: repository {
+          nameWithOwner
+          url
+        }
+        number
+        title
+        comments(last: 1) {
+          totalCount
+          items: nodes {
+            updatedAt
+          }
+        }
+      }
+    }
+  }
+}
