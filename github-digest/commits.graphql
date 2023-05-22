@@ -1,0 +1,9 @@
+{
+  nodes(ids: %s) {
+    ... on Commit {
+      associatedPullRequests(first: 1) {
+        totalCount
+      }
+    }
+  }
+}
