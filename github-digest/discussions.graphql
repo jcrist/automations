@@ -8,6 +8,7 @@
       ... on Discussion {
         type: __typename
         author {
+          type: __typename
           login
         }
         url
