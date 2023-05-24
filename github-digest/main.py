@@ -39,6 +39,7 @@ class Repo(msgspec.Struct, rename="camel"):
 
 
 class Actor(msgspec.Struct):
+    type: str
     login: str
 
 
@@ -158,6 +159,7 @@ def fetch_recent_items(token: str, after: datetime.datetime) -> list[Item]:
         for item in items
         if (
             item.author.login not in IGNORE_AUTHORS
+            and item.author.type != "Bot"
             and item.repo.name_with_owner not in IGNORE_REPOS
             and (
                 item.created_at >= after

@@ -8,6 +8,7 @@
       ... on PullRequest {
         type: __typename
         author {
+          type: __typename
           login
         }
         url
@@ -36,6 +37,7 @@
       ... on Issue {
         type: __typename
         author {
+          type: __typename
           login
         }
         url
