@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import datetime
 import html
 import os
@@ -17,7 +18,7 @@ import msgspec
 import requests
 
 
-ROOT = Path(__file__).absolute().parent
+ROOT = Path(__file__).absolute().parent.parent
 
 IGNORE_AUTHORS = {
     "jcrist",
@@ -133,7 +134,7 @@ def fetch_recent_items(token: str, after: datetime.datetime) -> list[Item]:
         items = []
         # Fetch recent issues, PRs, and discussions
         for file in ["issues.graphql", "discussions.graphql"]:
-            with open(ROOT / file, "r") as f:
+            with open(ROOT / "github-digest" / file, "r") as f:
                 template = f.read()
             cursor = None
             while True:
@@ -197,7 +198,7 @@ def fetch_recent_commits(token: str, after: datetime.datetime) -> list[Commit]:
 
             # Filter out commits that have an associated PR. This can only be
             # done by graphql.
-            with open(ROOT / "commits.graphql", "r") as f:
+            with open(ROOT / "github-digest" / "commits.graphql", "r") as f:
                 template = f.read()
             query = template % msgspec.json.encode(node_ids).decode()
             resp = session.post(  # type: ignore
@@ -301,6 +302,23 @@ def send_email(
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser("github-digest")
+    parser.add_argument(
+        "--no-email", action="store_true", help="Skip sending them email"
+    )
+    args = parser.parse_args()
+
+    # Load .env file if present
+    try:
+        with open(ROOT / ".env", "r") as f:
+            for line in f.readlines():
+                key, val = line.strip().split("=", 1)
+                val = val.removeprefix('"').removesuffix('"')
+                os.environ[key] = val
+    except FileNotFoundError:
+        pass
+
+    # Read secrets from environment
     EMAIL_USERNAME = os.environ["EMAIL_USERNAME"]
     EMAIL_ADDRESS = os.environ["EMAIL_ADDRESS"]
     EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
@@ -326,7 +344,15 @@ def main() -> None:
         html = format_html(groups)
         subject = f"GitHub Search Digest: msgspec ({today})"
         print(plain)
-        send_email(EMAIL_ADDRESS, EMAIL_USERNAME, EMAIL_PASSWORD, subject, plain, html)
+        if not args.no_email:
+            send_email(
+                EMAIL_ADDRESS,
+                EMAIL_USERNAME,
+                EMAIL_PASSWORD,
+                subject,
+                plain,
+                html,
+            )
 
 
 if __name__ == "__main__":
