@@ -322,7 +322,7 @@ def main() -> None:
     EMAIL_USERNAME = os.environ["EMAIL_USERNAME"]
     EMAIL_ADDRESS = os.environ["EMAIL_ADDRESS"]
     EMAIL_PASSWORD = os.environ["EMAIL_PASSWORD"]
-    GH_TOKEN = os.environ["GH_TOKEN"]
+    GITHUB_TOKEN = os.environ["GITHUB_TOKEN"]
 
     today = datetime.date.today()
     yesterday = today - datetime.timedelta(days=1)
@@ -331,8 +331,8 @@ def main() -> None:
         yesterday, datetime.time(14, tzinfo=datetime.timezone.utc)
     )
 
-    items = fetch_recent_items(GH_TOKEN, after)
-    commits = fetch_recent_commits(GH_TOKEN, after)
+    items = fetch_recent_items(GITHUB_TOKEN, after)
+    commits = fetch_recent_commits(GITHUB_TOKEN, after)
 
     if items or commits:
         groups: defaultdict[str, list[Item | Commit]] = defaultdict(list)
